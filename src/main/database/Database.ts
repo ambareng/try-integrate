@@ -2,6 +2,7 @@ import { createConnection, Connection } from 'typeorm';
 import path from 'path';
 import { defaultStorageFolder } from '..';
 import Patient from './models/Patient';
+import { PaymentScheme } from './models/PaymentScheme';
 
 export default class Database {
     private connection: Connection;
@@ -14,7 +15,7 @@ export default class Database {
         this.connection = await createConnection({
             type: 'sqlite',
             database: path.join(defaultStorageFolder, 'doc_app.sqlite'),
-            entities: [Patient],
+            entities: [PaymentScheme],
         });
 
         if (this.connection.isConnected) {
@@ -22,16 +23,16 @@ export default class Database {
         }
     }
 
-    public async insert(name: string, surname: string): Promise<Patient> {
-        const patientRepository = this.connection.getRepository(Patient);
-        const patient: Patient = { name: name, surname: surname };
+    public async insert(id: string, title: string): Promise<PaymentScheme> {
+        const repository = this.connection.getRepository(PaymentScheme);
+        const paymentScheme: PaymentScheme = { id: id, title: title };
 
-        return patientRepository.save(patient);
+        return repository.save(paymentScheme);
     }
 
-    public async fetchAll(): Promise<Patient[]> {
-        const patientRepository = this.connection.getRepository(Patient);
+    public async fetchAll(): Promise<PaymentScheme[]> {
+        const repository = this.connection.getRepository(PaymentScheme);
 
-        return patientRepository.find();
+        return repository.find();
     }
 }

@@ -1,9 +1,24 @@
 import { hot } from 'react-hot-loader/root';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { remote } from 'electron';
 import Database from '../../main/database/Database';
+import axios from 'axios';
 
 export const Application: React.FC<{}> = () => {
+    const [paymentScheme, setPaymentScheme] = useState([]);
+
+    useEffect(() => {
+        axios
+            .get('https://a.lampara.atmosclouds.com/api/accounting/payment-schemes', {
+                headers: {
+                    Authorization: 'Bearer ',
+                },
+            })
+            .then((response) => {
+                setPaymentScheme(response.data);
+            });
+    });
+
     const database: Database = remote.getGlobal('database');
 
     console.log(database);
